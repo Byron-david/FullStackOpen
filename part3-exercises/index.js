@@ -38,7 +38,7 @@ app.get('/info', (request, response) => {
   const message = `Phonebook has info for ${phonebook.length} people`
   const date = new Date(8.64e15).toString()
 
-  response.send(`<p>${message}</br></br>${date}</p`)
+  response.send(`<p>${message}</p><p>${date}</p>`)
 })
 
 // const generateId = () => {
@@ -68,16 +68,16 @@ app.get('/info', (request, response) => {
 //   response.json(note)
 // })
 
-// app.get('/api/notes/:id', (request, response) => {
-//   const id = parseInt(request.params.id)
-//   const note = notes.find(note => note.id === id)
-//   // response.json(note)
-//   if (note) {
-//     response.json(note)
-//   } else {
-//     response.status(404).end()
-//   }
-// })
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = phonebook.find(person => person.id === id)
+
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+})
 
 // app.delete('/api/notes/:id', (request, response) => {
 //   const id = request.params.id
