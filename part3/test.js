@@ -19,4 +19,4 @@ let notes = [
 
 const note = notes.find(note => note.id === 1)
 
-console.log(note)
+console.log(Math.max(...notes.map(n => Number(n.id))))
