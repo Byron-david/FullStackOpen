@@ -1,4 +1,4 @@
-let phonebook = [
+let people = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -22,5 +22,10 @@ let phonebook = [
   ]
 
 
-Math.floor(Math.random() * 10)
-console.log(Math.floor(Math.random() * 10))
+const name = "Dan Abramov"
+let check = people.find(p => p.name === "Dan Abramov")
+if (check) console.log(check)
+// console.log("false") : console.log("true")
+
+// let check = people.find(p => p.name === "Dan Abramov") === true ?
+// console.log("true") : console.log("false")

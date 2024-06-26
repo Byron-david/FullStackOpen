@@ -50,13 +50,25 @@ const generateId = () => {
   return String(maxId)
 }
 
+const isDuplicateName = (name) => {
+  let findName = people.find(c => c.name === name);
+  if (findName) return true;
+  else return false;
+}
+
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  console.log(body)
+  const duplicate = isDuplicateName(body.name)
 
   if (!body.name || !body.number) {
     return response.status(400).json({ 
       error: 'name missing' 
+    })
+  }
+
+  if(duplicate) {
+    return response.status(400).json({
+      error: 'name must be unique' 
     })
   }
 
@@ -67,7 +79,6 @@ app.post('/api/persons', (request, response) => {
   }
 
   people = people.concat(person)
-
   response.json(person)
 })
 
