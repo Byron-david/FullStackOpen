@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-let phonebook = [
+let people = [
   { 
     "id": "1",
     "name": "Arto Hellas", 
@@ -31,46 +31,49 @@ response.send('<h1>Phonebook</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
-response.json(phonebook)
+response.json(people)
 })
 
 app.get('/info', (request, response) => {
-  const message = `Phonebook has info for ${phonebook.length} people`
+  const message = `Phonebook has info for ${people.length} people`
   const date = new Date(8.64e15).toString()
 
   response.send(`<p>${message}</p><p>${date}</p>`)
 })
 
-// const generateId = () => {
-//   const maxId = notes.length > 0
-//     ? Math.max(...notes.map(n => Number(n.id)))
-//     : 0
-//   return String(maxId + 1)
-// }
+const generateId = () => {
+  const max = 999999
+  const randNum = Math.floor(Math.random() * max)
+  const maxId = people.length > 0
+    ? randNum
+    : 0
+  return String(maxId)
+}
 
-// app.post('/api/notes', (request, response) => {
-//   const body = request.body
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  console.log(body)
 
-//   if (!body.content) {
-//     return response.status(400).json({ 
-//       error: 'content missing' 
-//     })
-//   }
+  if (!body.name || !body.number) {
+    return response.status(400).json({ 
+      error: 'name missing' 
+    })
+  }
 
-//   const note = {
-//     content: body.content,
-//     important: Boolean(body.important) || false,
-//     id: generateId(),
-//   }
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  }
 
-//   notes = notes.concat(note)
+  people = people.concat(person)
 
-//   response.json(note)
-// })
+  response.json(person)
+})
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const person = phonebook.find(person => person.id === id)
+  const person = people.find(person => person.id === id)
 
   if (person) {
     response.json(person)
@@ -81,7 +84,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  phonebook = phonebook.filter(note => note.id !== id)
+  people = people.filter(person => person.id !== id)
 
   response.status(204).end()
 })
