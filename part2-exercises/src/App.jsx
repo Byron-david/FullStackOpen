@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid';
-
-const Person = ({ person }) => {
-  return (
-    <li>{person.name} {person.number}</li>
-  )
-}
+import Filter from './components/Filter.jsx'
+import PersonForm from './components/PersonForm.jsx'
+import Person from './components/Person.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -54,39 +51,23 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter: <input 
-                  value={filter}
-                  onChange={e => setFilter(e.target.value.toLowerCase())}
-            />
-        </div>
+      <Filter value={filter} handleChange={e => setFilter(e.target.value.toLowerCase())} />
+
       <h3>Add New</h3>
-      <form onSubmit={addName}>
-        <div>
-          name: <input 
-                  value={newName}
-                  onChange={handleNameChange}
-            />
-        </div>
-        <div>
-          number: <input 
-                    value={newNumber}
-                    onChange={handleNumberChange}
-              />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        handleAdd={addName}
+        nameValue={newName} 
+        numberValue={newNumber} 
+        handleName={handleNameChange} 
+        handleNumber={handleNumberChange}
+      />
+
       <h3>Numbers</h3>
       <div>debug: {newName}</div>
       <ul>
         {filterPersons.map(person =>
           <Person key={uuid()} person={person} />
           )}
-        {/* {persons.map(person => 
-          <Person key={uuid()} person={person} />
-        )} */}
       </ul>
     </div>
   )
