@@ -3,15 +3,16 @@ import { v4 as uuid } from 'uuid';
 
 const Person = ({ person }) => {
   return (
-    <li>{person.name}</li>
+    <li>{person.name} {person.number}</li>
   )
 }
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-1234567' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const checkName = (nameObject) => {
     const check = persons.find((person) => person.name === newName);
@@ -19,14 +20,15 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     } else {
       setPersons(persons.concat(nameObject))
+      setNewNumber('')
       setNewName('')  }
-      console.log(persons.length)
   }
 
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
-      name: newName
+      name: newName,
+      number: newNumber
     }
 
     checkName(nameObject)
@@ -34,6 +36,10 @@ const App = () => {
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
   }
 
   return (
@@ -45,6 +51,12 @@ const App = () => {
                   value={newName}
                   onChange={handleNameChange}
             />
+        </div>
+        <div>
+          number: <input 
+                    value={newNumber}
+                    onChange={handleNumberChange}
+              />
         </div>
         <div>
           <button type="submit">add</button>
