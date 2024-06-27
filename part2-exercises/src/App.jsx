@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid';
+import axios from 'axios'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Person from './components/Person.jsx'
@@ -18,7 +19,6 @@ const App = () => {
   const filterPersons = filter
     ? persons.filter(person => person.name.toLowerCase().includes(filter))
     : persons
-
 
   const checkName = (nameObject) => {
     const check = persons.find((person) => person.name === newName);
@@ -47,6 +47,14 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setNotes(response.data)
+      })
+  }, [])
 
   return (
     <div>
