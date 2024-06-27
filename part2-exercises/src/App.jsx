@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { v4 as uuid } from 'uuid';
 
 const Person = ({ person }) => {
   return (
@@ -12,18 +13,26 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
 
+  const checkName = (nameObject) => {
+    const check = persons.find((person) => person.name === newName);
+    if (check) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      setPersons(persons.concat(nameObject))
+      setNewName('')  }
+      console.log(persons.length)
+  }
+
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName
     }
 
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+    checkName(nameObject)
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -45,7 +54,7 @@ const App = () => {
       <div>debug: {newName}</div>
       <ul>
         {persons.map(person => 
-          <Person key={person.length + 1} person={person} />
+          <Person key={uuid()} person={person} />
         )}
       </ul>
     </div>
