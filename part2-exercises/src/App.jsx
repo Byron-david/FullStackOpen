@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import axios from 'axios'
 import personService from './services/persons'
 import Filter from './components/Filter.jsx'
+import Notification from './components/Notification.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Person from './components/Person.jsx'
 
@@ -12,6 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState('some error happened...')
 
   const filterPersons = filter
     ? persons.filter(person => person.name.toLowerCase().includes(filter))
@@ -27,8 +29,8 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+    console.log(newName);
     const person = persons.find((person) => person.name === newName)
-    const id = person.id
     const changePerson = { ...person, number: newNumber }
 
     const personObject = {
@@ -37,15 +39,22 @@ const App = () => {
     }
 
     if (person) {
-      if (window.confirm(`${person.name} is already in the phonebook. Would you like to update the phone number?`)) {
+      const id = person.id
+      if (window.confirm(`${newName} is already in the phonebook. Would you like to update the phone number?`)) {
         personService
           .update(id, changePerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           })
+          setErrorMessage(
+            `'${newName}' has been added!`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
           .catch(error => {
             alert(
-              `the person '${person.content}' was already deleted from server`
+              `the person '${newName}' was already deleted from server`
             )
             setPersons(persons.filter(p => p.id !== id))
         })
@@ -59,30 +68,18 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          setNewNumber('')
-          setNewNumber('')
-        })
-    }
 
-  }
-
-  const updatePerson = (id) => {
-    const person = persons.find(p => p.id === id)
-    const changePerson = { ...person, number: newNumber }
-  
-    if (window.confirm("Delete Entry?")) {
-      personService
-        .update(id, changePerson)
-        .then(returnedPerson => {
-          setPersons(notes.map(note => note.id !== id ? person : returnedPerson))
         })
-        .catch(error => {
-          alert(
-            `the person '${person.content}' was already deleted from server`
-          )
-          setPersons(persons.filter(p => p.id !== id))
-      })
+
+      setErrorMessage(
+        `'${newName}' has been added!`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
     }
+    setNewNumber('')
+    setNewNumber('')
   }
 
   const handleDelete = id => {
@@ -94,12 +91,6 @@ const App = () => {
             setPersons(persons.filter(p => p.id !== id))
         })
     }
-    //   .catch(error => {
-    //     alert(
-    //       `the note '${person.content}' was already deleted from server`
-    //     )
-    //     setPersons(persons.filter(p => p.id !== id))
-    // })
   }
 
 
@@ -127,7 +118,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <div>debug: {newName}</div>
+      <Notification message={errorMessage} />
       <ul>
         {filterPersons.map(person =>
           <Person key={uuid()} person={person} handleDelete={() => handleDelete(person.id)}/>
