@@ -27,21 +27,62 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const duplicateName = persons.find((person) => person.name === newName)
+    const person = persons.find((person) => person.name === newName)
+    const id = person.id
+    const changePerson = { ...person, number: newNumber }
+
     const personObject = {
       name: newName,
       number: newNumber
     }
 
-    duplicateName ? 
-    alert(`${duplicateName.name} is already added to phonebook`) :
-    personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewNumber('')
-        setNewNumber('')
+    if (person) {
+      if (window.confirm(`${person.name} is already in the phonebook. Would you like to update the phone number?`)) {
+        personService
+          .update(id, changePerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          })
+          .catch(error => {
+            alert(
+              `the person '${person.content}' was already deleted from server`
+            )
+            setPersons(persons.filter(p => p.id !== id))
+        })
+      }
+
+    }
+    else {
+      // duplicateName ? 
+      // alert(`${duplicateName.name} is already added to phonebook`) :
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewNumber('')
+          setNewNumber('')
+        })
+    }
+
+  }
+
+  const updatePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    const changePerson = { ...person, number: newNumber }
+  
+    if (window.confirm("Delete Entry?")) {
+      personService
+        .update(id, changePerson)
+        .then(returnedPerson => {
+          setPersons(notes.map(note => note.id !== id ? person : returnedPerson))
+        })
+        .catch(error => {
+          alert(
+            `the person '${person.content}' was already deleted from server`
+          )
+          setPersons(persons.filter(p => p.id !== id))
       })
+    }
   }
 
   const handleDelete = id => {
