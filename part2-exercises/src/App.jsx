@@ -13,7 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [errorMessage, setErrorMessage] = useState('some error happened...')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const filterPersons = filter
     ? persons.filter(person => person.name.toLowerCase().includes(filter))
@@ -47,15 +47,18 @@ const App = () => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           })
           setErrorMessage(
-            `'${newName}' has been added!`
+            `${newName} has been added!`
           )
           setTimeout(() => {
             setErrorMessage(null)
           }, 3000)
           .catch(error => {
-            alert(
-              `the person '${newName}' was already deleted from server`
+            setErrorMessage(
+              `${newName} was already deleted!`
             )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 3000)
             setPersons(persons.filter(p => p.id !== id))
         })
       }
