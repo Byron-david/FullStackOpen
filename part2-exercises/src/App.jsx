@@ -17,16 +17,6 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(filter))
     : persons
 
-  // const checkName = (personObject) => {
-  //   const check = persons.find((person) => person.name === newName)
-  //   if (check) {
-  //     alert(`${newName} is already added to phonebook`)
-  //   } else {
-  //     setPersons(persons.concat(personObject))
-  //     setNewNumber('')
-  //     setNewName('')  }
-  // }
-
   useEffect(() => {
     personService
       .getAll()
@@ -53,13 +43,24 @@ const App = () => {
         setNewNumber('')
       })
   }
-    // personService
-    //   .create(personObject)
-    //   .then(returnedPerson => {
-    //     setPersons(notes.map(person => person.name !== personName ? returnedPerson)) : alert(`${newName} is already added to phonebook`)))
-    //     setNewNumber('')
-    //     setNewNumber('')
-    //   })
+
+  const handleDelete = id => {
+    console.log(id);
+    if (window.confirm("Delete Entry?")) {
+      personService
+        .remove(id)
+        .then(returnedPerson => {
+            setPersons(persons.filter(p => p.id !== id))
+        })
+    }
+    //   .catch(error => {
+    //     alert(
+    //       `the note '${person.content}' was already deleted from server`
+    //     )
+    //     setPersons(persons.filter(p => p.id !== id))
+    // })
+  }
+
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -69,13 +70,6 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }, [])
 
   return (
     <div>
@@ -95,7 +89,7 @@ const App = () => {
       <div>debug: {newName}</div>
       <ul>
         {filterPersons.map(person =>
-          <Person key={uuid()} person={person} />
+          <Person key={uuid()} person={person} handleDelete={() => handleDelete(person.id)}/>
           )}
       </ul>
     </div>
