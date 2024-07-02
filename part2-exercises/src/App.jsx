@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid';
-import axios from 'axios'
 import personService from './services/persons'
 import Filter from './components/Filter.jsx'
 import Notification from './components/Notification.jsx'
