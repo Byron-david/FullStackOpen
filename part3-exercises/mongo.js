@@ -24,8 +24,6 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-console.log(process.argv)
-console.log(process.argv.length)
 if (process.argv.length > 3 ) {
   const person = new Person({
     name: inputName,
