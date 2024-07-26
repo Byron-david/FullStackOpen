@@ -89,12 +89,10 @@ const App = () => {
     if (window.confirm("Delete Entry?")) {
       personService
         .remove(id)
-        .then(returnedPerson => {
-            setPersons(persons.filter(p => p.id !== id))
-        })
+        .then(setPersons(persons.filter(p => p.id !== id))
+        )
     }
   }
-
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -103,7 +101,6 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
-
 
   return (
     <div>
